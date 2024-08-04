@@ -1,0 +1,15 @@
+{
+    "name": "React Amplify CI/CD Container",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+        "ms-vscode.vscode-node-azure-pack",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+    ],
+    "postCreateCommand": "npm install -g @aws-amplify/cli"
+}
