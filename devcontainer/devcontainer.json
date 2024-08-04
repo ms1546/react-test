@@ -1,0 +1,9 @@
+{
+    "name": "My Dev Container",
+    "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:0-20",
+    "postCreateCommand": "yarn install",
+    "forwardPorts": [
+      3000
+    ],
+    "remoteUser": "vscode"
+  }
