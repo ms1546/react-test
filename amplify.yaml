@@ -1,0 +1,48 @@
+version: 1
+applications:
+  - appRoot: /
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm install
+        build:
+          commands:
+            - npm build
+        postBuild:
+          commands:
+            - npm test
+      artifacts:
+        baseDirectory: build
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+    amplify:
+      phases:
+        preDeploy:
+          commands:
+            - echo "PreDeploy: Running Amplify CLI commands"
+      artifacts:
+        baseDirectory: build
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+    test:
+      phases:
+        preTest:
+          commands:
+            - echo "PreTest: Setting up environment for tests"
+        test:
+          commands:
+            - npm test
+      artifacts:
+        baseDirectory: coverage
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
