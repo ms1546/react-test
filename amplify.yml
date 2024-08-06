@@ -11,14 +11,14 @@ applications:
             - npm run build
         postBuild:
           commands:
-            - npm test -- --watchAll
+            - npm test
       artifacts:
         baseDirectory: build
         files:
           - '**/*'
       cache:
         paths:
-          - 'node_modules/**/*'
+          - node_modules/**/*
     amplify:
       phases:
         preDeploy:
@@ -30,7 +30,7 @@ applications:
           - '**/*'
       cache:
         paths:
-          - 'node_modules/**/*'
+          - node_modules/**/*
     test:
       phases:
         preTest:
@@ -38,11 +38,11 @@ applications:
             - 'echo "PreTest: Setting up environment for tests"'
         test:
           commands:
-            - npm test -- --watchAll
+            - npm test
       artifacts:
-        baseDirectory: coverage
+        baseDirectory: build
         files:
           - '**/*'
       cache:
         paths:
-          - 'node_modules/**/*'
+          - node_modules/**/*
