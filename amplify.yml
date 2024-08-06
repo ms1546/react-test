@@ -11,7 +11,7 @@ applications:
             - npm run build
         postBuild:
           commands:
-            - npm test
+            - npm test -- --watchAll
       artifacts:
         baseDirectory: build
         files:
@@ -38,7 +38,7 @@ applications:
             - 'echo "PreTest: Setting up environment for tests"'
         test:
           commands:
-            - npm test
+            - npm test -- --watchAll
       artifacts:
         baseDirectory: coverage
         files:
