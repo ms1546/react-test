@@ -40,7 +40,7 @@ applications:
           commands:
             - npm test -- --watchAll=false
       artifacts:
-        baseDirectory: coverage
+        baseDirectory: build
         files:
           - '**/*'
       cache:
