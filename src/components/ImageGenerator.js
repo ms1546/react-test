@@ -1,40 +1,51 @@
 import React, { useState } from 'react';
 import '../App.css';
 
-function App() {
+function ImageGenerator() {
   const [inputText, setInputText] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleGenerateImage = async () => {
+    if (!inputText.trim()) {
+      setError('Please enter text for image generation.');
+      return;
+    }
+
     setLoading(true);
     setImageUrl('');
     setError('');
-    const response = await fetch('https://api.openai.com/v1/images/generations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        prompt: inputText,
-        n: 1,
-        size: "512x512"
-      })
-    });
 
-    const data = await response.json();
-    if (response.ok) {
-      if (data.data && data.data.length > 0) {
-        setImageUrl(data.data[0].url);
+    try {
+      const response = await fetch('https://api.openai.com/v1/images/generations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          prompt: inputText,
+          n: 1,
+          size: "512x512"
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        if (data.data && data.data.length > 0) {
+          setImageUrl(data.data[0].url);
+        } else {
+          console.error('Error generating image:', data);
+        }
       } else {
-        console.error('Error generating image:', data);
+        setError(data.error.message);
       }
-    } else {
-      setError(data.error.message);
+    } catch (error) {
+      setError('An error occurred while generating the image.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -58,4 +69,4 @@ function App() {
   );
 }
 
-export default App;
+export default ImageGenerator;
