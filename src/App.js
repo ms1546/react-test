@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import ImageGenerator from './components/ImageGenerator';
 
 function App() {
