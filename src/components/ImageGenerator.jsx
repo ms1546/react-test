@@ -1,7 +1,30 @@
 import React, { useState } from 'react';
-import '../App.css';
+import './styles/ImageGenerator.css';
 
-function ImageGenerator() {
+const fetchGeneratedImage = async (inputText) => {
+  const response = await fetch('https://api.openai.com/v1/images/generations', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+    },
+    body: JSON.stringify({
+      prompt: inputText,
+      n: 1,
+      size: "256x256"
+    })
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error?.message || 'Failed to generate image');
+  }
+
+  return result.data;
+};
+
+function ImageGenerator () {
   const [inputText, setInputText] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -18,31 +41,16 @@ function ImageGenerator() {
     setError('');
 
     try {
-      const response = await fetch('https://api.openai.com/v1/images/generations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          prompt: inputText,
-          n: 1,
-          size: "512x512"
-        })
-      });
+      const generatedImages = await fetchGeneratedImage(inputText);
 
-      const data = await response.json();
-      if (response.ok) {
-        if (data.data && data.data.length > 0) {
-          setImageUrl(data.data[0].url);
-        } else {
-          console.error('Error generating image:', data);
-        }
+      if (generatedImages && generatedImages.length > 0) {
+        setImageUrl(generatedImages[0].url);
       } else {
-        setError(data.error.message);
+        throw new Error('No image generated');
       }
     } catch (error) {
-      setError('An error occurred while generating the image.');
+      console.error('Error generating image:', error);
+      setError(error.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }
